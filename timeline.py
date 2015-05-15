@@ -2,6 +2,8 @@ import os
 import subprocess
 import sys
 
+# TODO: set target directory, better logging
+
 root = '.'
 
 dirList=[]
@@ -23,17 +25,17 @@ for d in dirList:
     for item in files:
         
         # run fls on ewf image and output txt file
-        #if item.lower().endswith(('.e01')):
-        #    try:
-        #        fstype = subprocess.check_output(['fsstat', '-t', d + '/' + item])     
-        #        out = subprocess.check_output(['fls', '-m', '.', '-i', 'ewf', d + '/' + item])
-        #        flsList.append((d, fstype))
-        #        f = open(d + '.txt', 'w')
-        #        f.write(out)
-        #        f.close()
-        #    except:
-        #        e = sys.exc_info()[0]
-        #        print item + ' disk image could not be read and was skipped.'
+        if item.lower().endswith(('.e01')):
+            try:
+                fstype = subprocess.check_output(['fsstat', '-t', d + '/' + item])     
+                out = subprocess.check_output(['fls', '-m', '.', '-i', 'ewf', d + '/' + item])
+                flsList.append((d, fstype))
+                f = open(d + '.txt', 'w')
+                f.write(out)
+                f.close()
+            except:
+                e = sys.exc_info()[0]
+                print item + ' disk image could not be read and was skipped.'
 
         # run fls on raw image and output txt file
         if item.lower().endswith(('.img', '.dd')):
@@ -51,9 +53,7 @@ for d in dirList:
                                 makeFsDir = subprocess.call(['mkdir', '/home/bcadmin/Desktop/fs/' + d])                                
                                 hfs_extract = subprocess.check_output(['./unhfs-x.sh', '-v', '-resforks', 'APPLEDOUBLE', '-o', '/home/bcadmin/Desktop/tmp/' + d, d + '/' + item])
                                 makeFsReadOnly = subprocess.call(['bindfs', '-n', '-r', '/home/bcadmin/Desktop/tmp/' + d, '/home/bcadmin/Desktop/fs/' + d])
-                                #makeFilesReadOnly = subprocess.call(['sudo', 'chmod', '-R', '0444', '/home/bcadmin/Desktop/tmp/' + d])
-                                #makeDirReadOnly = subprocess.call(['sudo', 'chmod', '-R', '0544', '/home/bcadmin/Desktop/tmp/' + d])
-
+                                
                                 out = subprocess.check_output(['mac-robber', '/home/bcadmin/Desktop/fs/' + d])
                                 unmount = subprocess.call(['fusermount', '-u', '/home/bcadmin/Desktop/fs/' + d])
                                 fstype = 'hfs\n'
