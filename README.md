@@ -1,4 +1,4 @@
-# disk-image-timeline
+# Disk Image Timelines
 
 Generate file system event timelines [1] from a collection of disk images automatically, and collects the individual timelines into a master CSV file.
 
